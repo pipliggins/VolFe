@@ -18,6 +18,19 @@ import VolFe.model_dependent_variables as mdv
 
 # for a given melt composition, calcualte the saturation pressure
 def P_sat(PT,melt_wf,models,Ptol,nr_step,nr_tol):
+    """Calculate the pressure of vapor saturation for a given P, T, and melt composition (including volatiles).
+
+    Args:
+        PT (dict): Dictionary of pressure-temperature conditions (pressure in bars as "P" and temperature in 'C as "T")
+        melt_wf (dict): Dictionary of melt composition (SiO2, TiO2, etc. including volatiles)
+        models (pd.Dataframe): Dataframe of model options
+        Ptol (float): Tolerance for total pressure convergence
+        nr_step (float): step-size for Newton-Raphson solver
+        nr_tol (float): Tolerance for Newton-Raphson solver
+
+    Returns:
+        tuple[float,dict,dict]: Float of the pressure of vapor-saturation; dictionary of the concentration of melt species; dictionary of the ratios of melt species
+    """    
     ST = melt_wf["ST"]
     #H2OT = melt_wf["H2OT"]
     #CO2 = melt_wf["CO2"]
