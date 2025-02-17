@@ -2,7 +2,7 @@
 Code structure
 ==========
 
-This is a brief overview of how the VolFe code is structured and broadly where to find different types of functions in VolFe.
+This is a brief overview of how the VolFe code is structured and broadly where to find different types of functions in VolFe (see API reference for more detail about these functions).
 You don't need to understand this to run VolFe, but popped it here in case people are interested! 
 For instance, you could use VolFe functions in your code if they're helpful (particuarly model-dependent variables).
 

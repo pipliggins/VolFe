@@ -11,37 +11,16 @@ Others can be added as they become available (see Worked Example in :doc:`add yo
 Additionally, there are various options for how the calculations are done in VolFe. 
 This varies from which species are treated as insoluble in the melt to whether a csv of the results is created at the end of the calculation.
 
-To see which functions calculate the different model dependent variables and show the different model options currently available in VolFe, 
-click on the "Model dependent variables" heading in the "API reference" section on the left-hand ribbon. The click on the required function name, which are detailed below.
+To see the different options available, click on the "make_df_and_add_model_defaults()" under "Model dependent variables" in the API Refence section on the left-hand ribbon. 
 
+Here are some hints to the naming convention used for functions, where specific model options for these model dependent variables can be found:
 
-Equilibrium constants
--------
-- KCOHg(): equilibrium constant for CH4 + 2O2 = CO2 + 2H2O
+- Equilibrium constants: functions starting with K (e.g., KCOHg() is the function for calculating the equilibrium constants for CH4 + 2O2 = CO2 + 2H2O).
 
-- KCOg(): equilibrium constant for CO + 0.5O2 = CO
+- Fugacity coefficients: functions starting with y_ (e.g., y_CH4() is the function for calculating the fugacity coefficient for CH4).
 
-- KCOs(): equilibrium constant for Cgraphite + O2 = CO2
+- Solubility functions: functions starting with C_ (e.g., C_CH4() is the function for calculating the solubility function for CH4).
 
-- KHOSg(): equilibrium constant for 0.5S2 + H2O = H2S + 0.5O2
+- Oxygen fugacity and Fe3+/FeT: functions are FMQ(), NNO(), fO22Fe3FeT().
 
-- KHOg(): equilibrium constant for H2 + 0.5O2 = H2O
-
-- KOCSg(): equilibrium constant for 2CO2 + OCS = 3CO + SO2
-
-- KOSg(): equilibrium constant for 0.5S2 + O2 = SO2
-
-- KOSg2(): equilibrium constant for 0.5S2 + 1.5O2 = SO3
-
-
-- :doc:`Equilibrium constants <mdv/equilibrium_constants>`
-
-- :doc:`Fugacity coefficients <mdv/fugacity_coefficients>`
-
-- :doc:`Solubility functions <mdv/solubility_constants>`
-
-- :doc:`Oxygen fugacity and Fe3+/FeT <mdv/oxygen_fugacity>`
-
-- :doc:`Sulfide/sulfate content at sulfide/anhydrite saturation <mdv/saturation_conditions>`
-
-- :doc:`Calculation options <mdv/calculation_options>`
+- Sulfide/sulfate content at sulfide/anhydrite saturation: functions are SCSS() and SCAS().
