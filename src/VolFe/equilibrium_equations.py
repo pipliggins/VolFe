@@ -914,7 +914,7 @@ def eq_SOFe_melt(PT,bulk_wf,melt_wf,models,nr_step,nr_tol,guesses): # equilibriu
 ##############
 
 def newton_raphson(x0,constants,e1,step,eqs,deriv):
-    """_summary_
+    """Newton-Raphson solver.
 
     Args:
         x0 (float): Initial guess
@@ -922,7 +922,7 @@ def newton_raphson(x0,constants,e1,step,eqs,deriv):
         e1 (float): Tolerance for solver
         step (float): Step-size for solver
         eqs (function): Equations to solve
-        deriv (function): Differentials of equations to solve
+        deriv (func): Differentials of equations to solve
 
     Returns:
         float: Solution

@@ -34,5 +34,6 @@ This is the VolFe documentation
    melt_gas
    model_dependent_variables
    equilibrium_equations
+   differential_equations
    calculations
    batch_calculations
