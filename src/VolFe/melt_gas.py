@@ -358,7 +358,7 @@ def Dbuffer2fO2(PT,D,buffer,model):
 
     Parameters
     ----------
-    PT: dictionary
+    PT: dict
         Dictionary of pressure-temperature conditions: pressure (bars) as "P" and temperature ('C) as "T". 
 
     D: float
@@ -1636,7 +1636,7 @@ def Fe3Fe2(melt_wf):
 
     Parameters
     ----------      
-    melt_wf: dictionary
+    melt_wf: dict
         Dictionary of melt composition in weight fraction (SiO2, TiO2, etc.)
 
     Returns
