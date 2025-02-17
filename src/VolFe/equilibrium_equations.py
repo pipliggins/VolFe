@@ -172,6 +172,20 @@ def initial_guesses(run,PT,melt_wf,setup,models,system): ### CHECK ###
     return guesses
 
 def mg_equilibrium(PT,melt_wf,bulk_wf,models,nr_step,nr_tol,guesses): ### CHECK ###
+    """_summary_
+
+    Args:
+        PT (dict): Pressure in bars as "P" and temperature in 'C as "T"
+        melt_wf (dict): Melt composition (SiO2, TiO2, etc. including volatiles)
+        bulk_wf (dict): Bulk composition in weight fraction
+        models (pandas.Dataframe): Model options
+        nr_step (float): Step-size for Newton-Raphson solver
+        nr_tol (float): Tolerance for Newton-Raphson solver
+        guesses (dict): Initial guesses for solver
+
+    Returns:
+        tuple(dict,dict,dict,dict,pandas.Dataframe,str,dict): Gas composition in mole fraction; Melt composition in weight fraction, Bulk composition in weight fraction, Updated guesses for solver; Updated model options; Updated solve species option; Mass balance check
+    """    
     system = set_system(melt_wf,models)
     solve_species = models.loc["solve_species","option"]
 
@@ -366,7 +380,17 @@ def mg_equilibrium(PT,melt_wf,bulk_wf,models,nr_step,nr_tol,guesses): ### CHECK 
 #################################################
 
 def eq_C_melt(PT,melt_wf,models): # equilibrium partitioning of C in the melt in CO system
-    
+    """Equilibrium partitioning of C in the melt in CO system.
+
+    Args:
+        PT (dict): Pressure in bars as "P" and temperature in 'C as "T"
+        melt_wf (dict): Melt composition (SiO2, TiO2, etc. including volatiles)
+        models (pandas.Dataframe): Model options
+
+
+    Returns:
+        dict: Melt composition
+    """    
     wt_C = melt_wf['CT'] # weight fraction
     K1 = mdv.KCOg(PT,models) 
     K2 = mdv.C_CO3(PT,melt_wf,models) # mole fraction
@@ -387,6 +411,18 @@ def eq_C_melt(PT,melt_wf,models): # equilibrium partitioning of C in the melt in
     return result
 
 def eq_H_melt(PT,melt_wf,models,nr_step,nr_tol): # equilibrium partitioning of H in the melt in HO system
+    """Equilibrium partitioning of H in the melt in HO system.
+
+    Args:
+        PT (dict): Pressure in bars as "P" and temperature in 'C as "T"
+        melt_wf (dict): Melt composition (SiO2, TiO2, etc. including volatiles)
+        models (pandas.Dataframe): Model options
+        nr_step (float): Step-size for solver
+        nr_tol (float): Tolerance for solver
+
+    Returns:
+        dict: Melt composition
+    """    
     if models.loc["Hspeciation","option"] != "none":
         print("not possible yet")
     wt_H = melt_wf['HT'] # weight fraction
@@ -427,6 +463,16 @@ def eq_H_melt(PT,melt_wf,models,nr_step,nr_tol): # equilibrium partitioning of H
     return result
 
 def eq_S_melt(PT,melt_wf,models):
+    """Equilibrium partitioning of S in the melt in SO system.
+
+    Args:
+        PT (dict): Pressure in bars as "P" and temperature in 'C as "T"
+        melt_wf (dict): Melt composition (SiO2, TiO2, etc. including volatiles)
+        models (pandas.Dataframe): Model options
+
+    Returns:
+        dict: Melt composition
+    """
     S6p_ST = mg.S6ST(PT,melt_wf,models)
     S2m_ST = 1. - S6p_ST
     wm_S2m_ = S2m_ST*melt_wf['ST']
@@ -435,6 +481,19 @@ def eq_S_melt(PT,melt_wf,models):
     return result
     
 def eq_CH_melt(PT,melt_wf,models,nr_step,nr_tol,guesses):
+    """Equilibrium partitioning of C and H in the melt in CHO system.
+
+    Args:
+        PT (_type_): _description_
+        melt_wf (_type_): _description_
+        models (_type_): _description_
+        nr_step (_type_): _description_
+        nr_tol (_type_): _description_
+        guesses (_type_): _description_
+
+    Returns:
+        tuple(float,float,tuple(),tuple()): Mole fraction CO2; Mole fraction H2O; Melt composition; Mass balance
+    """    
     P = PT["P"]
     wt_C = melt_wf['CT']
     wt_H = melt_wf['HT']
