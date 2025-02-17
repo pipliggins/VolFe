@@ -33,12 +33,58 @@ import VolFe.calculations as c
 
 # outputing sample name
 def results_table_sample_name(setup,run):
+    '''
+    Creates Dataframes with headers and values for Sample name
+
+    Parameters
+    ----------
+    setup: pd.DataFrame
+        Dataframe with melt compositions to be used.
+
+    run: int
+        Row number to be read from Dataframe
+
+    Returns
+    -------
+    Dataframe
+        Dataframes with headers and values for sample name        
+
+    '''
     results_headers = pd.DataFrame([["sample"]])
     results_values = pd.DataFrame([[setup.loc[run,"Sample"]]])
     return results_headers, results_values
 
 # outputting melt composition, T, P
 def results_table_melt_comp_etc(PT,melt_comp,conc,frac,melt_wf):
+    '''
+    Creates Dataframes with headers and values for pressure, temperature, and melt composition (concentration and ratios)
+
+    Parameters
+    ----------
+    PT: dict
+        Dictionary of pressure-temperature conditions
+        pressure (bars) as "P"
+        temperature ('C) as "T"
+    
+    melt_comp: dict
+        Dictionary of melt composition in weight fraction (major and minor elements)
+
+    conc: dict
+        Dictionary of volatile concentrations in teh melt in weight fraction
+    
+    frac: dict
+        Dictionary of ratios of each species over volatile element
+    
+    melt_wf: dict:
+        Dictionary of melt composition (specifically for sulfide composition)
+
+
+    Returns
+    -------
+    Dataframe
+        Dataframes with headers and values for pressure, temperature, and melt composition (concentration and ratios) 
+
+    '''
     results_headers = pd.DataFrame([["T_C","P_bar",
         "SiO2_wtpc", "TiO2_wtpc", "Al2O3_wtpc", "FeOT_wtpc", "MnO_wtpc", "MgO_wtpc", "CaO_wtpc", "Na2O_wtpc", "K2O_wtpc", "P2O5_wtpc",
         "H2OT_wtpc","OH_wtpc","H2Omol_wtpc","H2_ppmw","CH4_ppmw","CO2T_ppmw","CO2mol_ppmw","CO2carb_ppmw","CO_ppmw","S2-_ppmw","S6+_ppmw","H2S_ppmw",
@@ -62,11 +108,33 @@ def results_table_melt_comp_etc(PT,melt_comp,conc,frac,melt_wf):
     return results_headers, results_values
 
 def results_table_melt_vol():
+    '''
+    Creates Dataframes with headers for volatile concentrations in melt
+
+    Returns
+    -------
+    Dataframe
+        Dataframe with headers for volatile concentrations in melt 
+
+    '''
     results_headers = pd.DataFrame([["H2OT-eq_wtpc","CO2T-eq_ppmw","ST_ppmw","X_ppmw"]])
     return results_headers
 
 # outputting model options used in the calculation
 def results_table_model_options(models): 
+    '''
+    Creates Dataframes with headers and values for options used in calculations and datetime of calculations
+
+    Parameters
+    ----------
+    models: pd.Dataframe
+        Dataframe with model options used in calculations
+
+    Returns
+    -------
+    Dataframe
+        Dataframes with headers and values for model options used in calculations and datetime of calculation
+    '''
     results_headers = pd.DataFrame([["setup opt","COH_species opt","H2S_m opt","species X opt","Hspeciation opt",
                  "fO2 opt","NNObuffer opt","FMQbuffer opt",
                  "carbon dioxide opt","water opt","hydrogen opt","sulfide opt","sulfate opt","hydrogen sulfide opt","methane opt","carbon monoxide opt","species X solubility opt","Cspeccomp opt","Hspeccomp opt",
@@ -84,6 +152,27 @@ def results_table_model_options(models):
     return results_headers, results_values
 # outputting fugacities, partial pressures, gas mole fraction, fugacity coefficients, molecular masses, solubility constants, equilibrium constants, melt density
 def results_table_f_p_xg_y_M_C_K_d(PT,melt_wf,models): 
+    '''
+    Creates Dataframes with headers and values for fO2, fugacities, partial pressures, vapor mole fractions, fugacity coefficients, molecular masses, solubility constants, equilibrium constants, and melt density
+
+    Parameters
+    ----------
+    PT: dict
+        Dictionary of pressure-temperature conditions
+        pressure (bars) as "P"
+        temperature ('C) as "T"
+    
+    melt_wf: dict:
+        Dictionary of melt composition (specifically for sulfide composition)
+
+    models: pd.Dataframe
+        Dataframe with model options used in calculations
+
+    Returns
+    -------
+    Dataframe
+        Dataframes with headers and values for for fO2, fugacities, partial pressures, vapor mole fractions, fugacity coefficients, molecular masses, solubility constants, equilibrium constants, and melt density
+    '''    
     results_headers = pd.DataFrame([["fO2_DNNO","fO2_DFMQ",
                 "fO2_bar","fH2_bar","fH2O_bar","fS2_bar","fSO2_bar","fH2S_bar","fCO2_bar","fCO_bar","fCH4_bar","fOCS_bar","fX_bar",
                 "pO2_bar","pH2_bar","pH2O_bar","pS2_bar","pSO2_bar","pH2S_bar","pCO2_bar","pCO_bar","pCH4_bar","pOCS_bar","pX_bar",
@@ -105,14 +194,31 @@ def results_table_f_p_xg_y_M_C_K_d(PT,melt_wf,models):
     return results_headers, results_values
 # headers for open system degassing all gas
 def results_table_open_all_gas():
+    """Creates Dataframe of headers for cumulative gas composition
+
+    Returns:
+        pandas.Dataframe: Headers for cumulative gas composition
+    """    
     results_headers = pd.DataFrame([["xgO2_all_mf","xgH2_all_mf","xgH2O_all_mf","xgS2_all_mf","xgSO2_all_mf","xgH2S_all_mf","xgCO2_all_mf","xgCO_all_mf","xgCH4_all_mf","xgOCS_all_mf","xgX_all_mf","xgC_S_all_mf"]])
     return results_headers
 # saturation conditions
 def results_table_sat(sulf_sat_result,PT,melt_wf,models):
+    """Creates Dataframe of headers and values for sulfur and graphite saturation results.
+
+    Args:
+        sulf_sat_result (dict): Sulfur saturation results
+        PT (dict): Pressure in bars as "P" and temperature in 'C as "T"
+        melt_wf (dict): Melt composition (SiO2, TiO2, etc. including volatiles)
+        models (pandas.Dataframe): Model options
+
+    Returns:
+        pandas.Dataframe: Headers and values for sulfur and graphite saturation results
+    """    
     results_headers = pd.DataFrame([["SCSS_ppm","sulfide saturated","SCAS_ppm","anhydrite saturated","ST melt if sat","graphite saturated"]])
     results_values = pd.DataFrame([[sulf_sat_result["SCSS"],sulf_sat_result["sulfide_sat"],sulf_sat_result["SCAS"],sulf_sat_result["sulfate_sat"],sulf_sat_result["ST"],c.graphite_saturation(PT,melt_wf,models)]])
     return results_headers, results_values
 # isotopes
+# WORK IN PROGRESS
 def results_table_isotope_R(R,R_all_species_S,R_m_g_S,R_all_species_C,R_m_g_C,R_all_species_H,R_m_g_H):
     headers = pd.DataFrame([["R_ST","R_S_m","R_S_g","R_S_S2-","R_S_S2","R_S_OCS","R_S_H2S","R_S_SO2","R_S_S6+","R_S_H2Smol","a_S_g_m",
                             "R_CT","R_C_m","R_C_g","R_C_CO2","R_C_CO","R_C_CH4",'R_C_OCS',"R_C_COmol","R_C_CH4mol","R_C_CO2mol","R_C_CO32-","a_C_g_m",
@@ -123,6 +229,7 @@ def results_table_isotope_R(R,R_all_species_S,R_m_g_S,R_all_species_C,R_m_g_C,R_
     return headers, values
 #def results_table_isotope_a_D():
 #    return headers, values
+# WORK IN PROGRESS
 def results_table_isotope_d(R,R_all_species_S,R_m_g_S,R_all_species_C,R_m_g_C,R_all_species_H,R_m_g_H):
     headers = pd.DataFrame([["d_ST","d_S_m","d_S_g","d_S_S2-","d_S_S2","d_S_OCS","d_S_H2S","d_S_SO2","d_S_S6+","d_S_H2Smol","D_S_g_m",
                             "d_CT","d_C_m","d_C_g","d_C_CO2","d_C_CO","d_C_CH4",'d_C_OCS',"d_C_COmol","d_C_CH4mol","d_C_CO2mol","d_C_CO32-","D_C_g_m",
@@ -143,7 +250,7 @@ def options_from_setup(run, models, setup):
 
     Parameters
     ----------
-    run: float
+    run: int
         Integer of the row in the setup file to read from (note the first row under the headers is row 0).   
     models: pd.DataFrame
         Dataframe of models.csv file.
@@ -276,6 +383,8 @@ def calc_Pvsat(setup,models=mdv.default_models,first_row=0,last_row=None,p_tol=1
         H2O and/or CO2ppm and/or STppm and/or Xppm
         Note: concentrations (unless otherwise stated) are in wt%
     
+        
+
     Optional:
     models: pandas.DataFrame
         Dataframe of options for different models.
@@ -292,7 +401,8 @@ def calc_Pvsat(setup,models=mdv.default_models,first_row=0,last_row=None,p_tol=1
 
     Returns
     -------
-    results: pandas.DataFrame
+    pandas.DataFrame
+        Dataframe of results of pressure of vapor saturation calculation
 
     Outputs
     -------
@@ -413,20 +523,19 @@ def calc_gassing(setup,models=mdv.default_models,run=0,nr_step=1.,nr_tol=1.e-9,d
         wt_g [IF starting from given pressure and gas is present, can specifiy the gas present in wt%]
         initial_CO2wtpc [IF starting from given pressure and gas is present, can specifiy initial composition using initial CO2 dissolved in the melt in wt%]
         xg_O2, xg_CO, xg_H2, xg_S2, xg_X [IF starting from a given pressure, need initial guesses for mole fraction of gas species]
-    species: pandas.DataFrame
-        Dataframe of species.csv file.
-    models: pandas.DataFrame
-        Dataframe of models.csv file.
 
+        
     Optional:
-    run: float
+    models: pandas.DataFrame
+        Dataframe of options for different models.
+    run: int
         Integer of the row in the setup file to run (note the first row under the headers is row 0). Default = 0
     nr_step: float
         Step size for Newton-Raphson solver for melt speciation (typically 1 is fine, but this can be made smaller if there are problems with convergence).
     nr_tol: float
         Tolerance for the Newton-Raphson solver for melt speciation in weight fraction (can be increased if there are problems with convergence). Default = 1.e-6
     dp_step: float
-        Pressure step size for gassing calculation in bars. Default = 10    
+        Pressure step size for gassing calculation in bars.  
     psat_tol: float
         Required tolerance for convergence of Pvsat in bars. Default = 0.1
     dwtg: float
@@ -435,10 +544,13 @@ def calc_gassing(setup,models=mdv.default_models,run=0,nr_step=1.,nr_tol=1.e-9,d
         Step-size for newton-raphson convergence for isotopes (can be increased if there are problems with convergence). Default = 1e.-1
     i_nr_tol: float
         Tolerance for newton-raphson convergence for isotopes (can be increased if there are problems with convergence). Default = 1.e-9
+    nr_step_eq: float
+        Default = 1
 
     Returns
     -------
-    results: pandas.DataFrame
+    pandas.DataFrame
+        Dataframe of results of degassing calculation
 
     Outputs
     -------
@@ -884,7 +996,48 @@ a_H2S_S_,a_SO4_S_,a_S2_S_,a_SO2_S_,a_OCS_S_,""]])
 ### calculate isobars ###
 #########################
 def calc_isobar(setup,run=0,models=mdv.default_models,initial_P=1000.,final_P=10000.,step_P=1000.):
-    
+    """ 
+    Calculates the pressure of vapor saturation for multiple melt compositions given volatile-free melt composition, volatile content, temperature, and an fO2 estimate.
+
+
+    Parameters
+    ----------
+    setup: pandas.DataFrame
+        Dataframe with melt composition to be used, requires following headers (notes in [] are not part of the headers): 
+        Sample, T_C, 
+        DNNO or DFMQ or logfO2 or (Fe2O3 and FeO) or Fe3FeT or S6ST, [at initial pressure]
+        SiO2, TiO2, Al2O3, (Fe2O3T or FeOT unless Fe2O3 and FeO given), MnO, MgO, CaO, Na2O, K2O, P2O5, [concentrations are in wt%]
+        (H2O and/or CO2ppm and/or STppm and/or Xppm) [concentration of H2O in wt%]
+        P_bar [IF starting from a given pressure]
+        final_P [IF regassing, pressure calculation stops at in bars]
+        wt_g [IF starting from given pressure and gas is present, can specifiy the gas present in wt%]
+        initial_CO2wtpc [IF starting from given pressure and gas is present, can specifiy initial composition using initial CO2 dissolved in the melt in wt%]
+        xg_O2, xg_CO, xg_H2, xg_S2, xg_X [IF starting from a given pressure, need initial guesses for mole fraction of gas species]
+
+
+    Optional:
+    run: int
+        Integer of the row in the setup file to run (note the first row under the headers is row 0). Default = 0
+    models: pandas.DataFrame
+        Dataframe of options for different models.
+    initial_P: float
+        Starting pressure in bar for isobar calculation. Default = 1000
+    final P: float
+        Final pressure in bar for isobar calculation. Default = 10000
+    step_P: float
+        Pressure step in bar for calculating isobars between starting and final pressures. Default = 1000
+
+    Returns
+    -------
+    pandas.DataFrame
+        Dataframe of results from isobar calculation
+
+    Outputs
+    -------
+    If output csv = yes in models
+    results_gassing_chemistry: csv file
+
+    """
     if models.loc["COH_species","option"] == "H2O-CO2 only":
         PT={"T":setup.loc[run,"T_C"]}
         
@@ -919,6 +1072,41 @@ def calc_isobar(setup,run=0,models=mdv.default_models,initial_P=1000.,final_P=10
 ### calculate pure solubility ###
 #################################   
 def calc_pure_solubility(setup,run=0,models=mdv.default_models,initial_P=5000.):
+    """ 
+    Calculates the solubility of pure H2O and pure CO2
+
+
+    Parameters
+    ----------
+    setup: pandas.DataFrame
+        Dataframe with melt compositions to be used, requires following headers: 
+        Sample, T_C, 
+        SiO2, TiO2, Al2O3, (Fe2O3T or FeOT unless Fe2O3 and FeO given), MnO, MgO, CaO, Na2O, K2O, P2O5, 
+        H2O and/or CO2ppm and/or STppm and/or Xppm
+        Note: concentrations (unless otherwise stated) are in wt%
+        Optional
+        P_bar is pressure is given (otherwise calculation is at Pvsat)
+        Fe3FeT is P_bar is specified
+    
+    Optional:
+    run: int
+        Row number of input data
+    models: pandas.DataFrame
+        Dataframe of options for different models.
+    first_row: float
+        Integer of the first row in the setup file to run (note the first row under the headers is row 0). Default = 0  
+    initial_P: float
+        Starting pressure in bar for solubility calculation. Default = 5000
+
+    Returns
+    -------
+    pandas.DataFrame
+
+    Outputs
+    -------
+    results_pure_solubility.csv: csv file (if output csv = yes in models)
+
+    """
     if models.loc["print status","option"] == "True":
         print(setup.loc[run,"Sample"],initial_P)
     PT={"T":setup.loc[run,"T_C"]}
@@ -951,7 +1139,20 @@ def calc_pure_solubility(setup,run=0,models=mdv.default_models,initial_P=5000.):
 ######################################
 # print capacities for multiple melt compositions in input file
 def calc_sol_consts(setup,first_row=0,last_row=None,models=mdv.default_models):
-    
+    """Calculate solubility functions for given melt composition and conditions
+
+    Args:
+        setup (pandas.Dataframe): Input data
+        first_row (int, optional): First row of input data to run calculation for. Defaults to 0.
+        last_row (int, optional): Last row of input data to run calculation for. Defaults to None.
+        models (pandas.Dataframe, optional): Model options. Defaults to mdv.default_models.
+
+    Returns:
+        pandas.Dataframe: Values of solubility functions
+
+    Outputs:
+        'capacities.csv' is 'output_csv' is True
+    """    
     # set up results table
     results_headers_models = pd.DataFrame([["species X opt","Hspeciation opt",
                  "fO2 opt","NNObuffer opt","FMQbuffer opt",
@@ -1026,7 +1227,20 @@ def calc_sol_consts(setup,first_row=0,last_row=None,models=mdv.default_models):
 ### calculate fugacity coefficients ###
 #######################################
 def calc_fugacity_coefficients(setup,first_row=0,last_row=None,models=mdv.default_models):
+    """Calculates values of fugacity coefficients for given conditions.
 
+    Args:
+        setup (pandas.Dataframe): Input data
+        first_row (int, optional): First row of input data to run calculation for. Defaults to 0.
+        last_row (int, optional): Last row of input data to run calculation for. Defaults to None.
+        models (pandas.Dataframe, optional): Model options. Defaults to mdv.default_models.
+
+    Returns:
+        pandas.Dataframe: Values of fugacity coefficients
+
+    Outputs:
+        'results_fugacity_coefficients.csv' is 'output_csv' is True
+    """
     # set up results table
     results_headers_models = pd.DataFrame([["y_CO2 opt","y_SO2 opt","y_H2S opt","y_H2 opt","y_O2 opt","y_S2 opt","y_CO opt","y_CH4 opt","y_H2O opt","y_OCS opt","y_X opt","Date"]])
     results_headers_values = pd.DataFrame([["Sample","P_bar","T_C","yO2","yH2","yH2O","yS2","ySO2","yH2S","yCO2","yCO","yCH4","yOCS","yX"]])
@@ -1101,11 +1315,11 @@ def calc_melt_S_oxybarometer(setup,first_row=0,last_row=None,models=mdv.default_
 
     Returns
     -------
-    results: pandas.DataFrame
+    pandas.DataFrame
 
     Outputs
     -------
-    fO2_range_from_S: csv file (if output csv = yes in models)
+    fO2_range_from_S: csv file (if output csv = True in models)
 
     """
 
@@ -1178,8 +1392,22 @@ def calc_melt_S_oxybarometer(setup,first_row=0,last_row=None,models=mdv.default_
 ########################################
 ### measured parameters within error ### 
 ########################################
-def calc_comp_error(setup,run,iterations,models=mdv.default_models):
-    
+def calc_comp_error(setup,run,iterations=100,models=mdv.default_models):
+    """Generates a specified number of random melt compositions given errors on the composition.
+
+    Args:
+        setup (pandas.Dataframe): Input data
+        run (int): Row number of input data
+        iterations (int, optional): Number of compositions within error to produce. Defaults to 100
+        models (pandas.Dataframe, optional): Model options. Defaults to mdv.default_models.
+
+    Returns:
+        pandas.Dataframe: Results of Monte Carlo compositions
+
+    Outputs
+    -------
+    'random_compositions.csv' if 'output csv' is True
+    """    
     # set up results table
     results = pd.DataFrame([["Sample","T_C",
                   "SiO2","TiO2","Al2O3","FeOT","MnO","MgO","CaO","Na2O","K2O","P2O5",
