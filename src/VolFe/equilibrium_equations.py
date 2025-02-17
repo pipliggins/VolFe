@@ -71,7 +71,7 @@ def initial_guesses(run,PT,melt_wf,setup,models,system): ### CHECK ###
     melt_wf: dict
         Dictionary of weight fraction of melt composition
     
-    setup: pandas.Dataframe
+    setup: pandas.DataFrame
         Input dataframe of melt composition(s)
     
     models: pandas.DataFrame
@@ -178,13 +178,13 @@ def mg_equilibrium(PT,melt_wf,bulk_wf,models,nr_step,nr_tol,guesses): ### CHECK 
         PT (dict): Pressure in bars as "P" and temperature in 'C as "T"
         melt_wf (dict): Melt composition (SiO2, TiO2, etc. including volatiles)
         bulk_wf (dict): Bulk composition in weight fraction
-        models (pandas.Dataframe): Model options
+        models (pandas.DataFrame): Model options
         nr_step (float): Step-size for Newton-Raphson solver
         nr_tol (float): Tolerance for Newton-Raphson solver
         guesses (dict): Initial guesses for solver
 
     Returns:
-        tuple(dict,dict,dict,dict,pandas.Dataframe,str,dict): Gas composition in mole fraction; Melt composition in weight fraction, Bulk composition in weight fraction, Updated guesses for solver; Updated model options; Updated solve species option; Mass balance check
+        tuple(dict,dict,dict,dict,pandas.DataFrame,str,dict): Gas composition in mole fraction; Melt composition in weight fraction, Bulk composition in weight fraction, Updated guesses for solver; Updated model options; Updated solve species option; Mass balance check
     """    
     system = set_system(melt_wf,models)
     solve_species = models.loc["solve_species","option"]
@@ -385,7 +385,7 @@ def eq_C_melt(PT,melt_wf,models): # equilibrium partitioning of C in the melt in
     Args:
         PT (dict): Pressure in bars as "P" and temperature in 'C as "T"
         melt_wf (dict): Melt composition (SiO2, TiO2, etc. including volatiles)
-        models (pandas.Dataframe): Model options
+        models (pandas.DataFrame): Model options
 
 
     Returns:
@@ -416,7 +416,7 @@ def eq_H_melt(PT,melt_wf,models,nr_step,nr_tol): # equilibrium partitioning of H
     Args:
         PT (dict): Pressure in bars as "P" and temperature in 'C as "T"
         melt_wf (dict): Melt composition (SiO2, TiO2, etc. including volatiles)
-        models (pandas.Dataframe): Model options
+        models (pandas.DataFrame): Model options
         nr_step (float): Step-size for solver
         nr_tol (float): Tolerance for solver
 
@@ -468,7 +468,7 @@ def eq_S_melt(PT,melt_wf,models):
     Args:
         PT (dict): Pressure in bars as "P" and temperature in 'C as "T"
         melt_wf (dict): Melt composition (SiO2, TiO2, etc. including volatiles)
-        models (pandas.Dataframe): Model options
+        models (pandas.DataFrame): Model options
 
     Returns:
         dict: Melt composition
@@ -484,12 +484,12 @@ def eq_CH_melt(PT,melt_wf,models,nr_step,nr_tol,guesses):
     """Equilibrium partitioning of C and H in the melt in CHO system.
 
     Args:
-        PT (_type_): _description_
-        melt_wf (_type_): _description_
-        models (_type_): _description_
-        nr_step (_type_): _description_
-        nr_tol (_type_): _description_
-        guesses (_type_): _description_
+        PT (dict): Pressure in bars as "P" and temperature in 'C as "T"
+        melt_wf (dict): Melt composition (SiO2, TiO2, etc. including volatiles)
+        models (pandas.DataFrame): Model options
+        nr_step (float): Step-size for solver
+        nr_tol (float): Tolerance for solver
+        guesses (dict): Initial guesses for solver
 
     Returns:
         tuple(float,float,tuple(),tuple()): Mole fraction CO2; Mole fraction H2O; Melt composition; Mass balance
@@ -558,6 +558,19 @@ def eq_CH_melt(PT,melt_wf,models,nr_step,nr_tol,guesses):
     return xm_CO2_,xm_H2O_, results1, results2
 
 def eq_HS_melt(PT,melt_wf,models,nr_step,nr_tol): # not sure this is right?
+    """Equilibrium partitioning of H and S in the melt in SHO system.
+
+    Args:
+        PT (dict): Pressure in bars as "P" and temperature in 'C as "T"
+        melt_wf (dict): Melt composition (SiO2, TiO2, etc. including volatiles)
+        models (pandas.DataFrame): Model options
+        nr_step (float): Step-size for solver
+        nr_tol (float): Tolerance for solver
+        guesses (dict): Initial guesses for solver
+
+    Returns:
+        tuple(float,float,float,float,float,float): Mole fraction H2O, weight fraction H2O, weight fraction H2, weight fraction S2-, weight fraction S6+, weight fraction H2S  
+    """      
     wt_S = melt_wf['ST']
     wt_H = melt_wf['HT']
     fO2 = mdv.f_O2(PT,melt_wf,models)
@@ -623,6 +636,19 @@ def eq_HS_melt(PT,melt_wf,models,nr_step,nr_tol): # not sure this is right?
     return xm_H2O_, wm_H2O_, wm_H2_, wm_S2m_, wm_S6p_, wm_H2S_ 
 
 def eq_CHS_melt(PT,melt_wf,models,nr_step,nr_tol,guesses):
+    """Equilibrium partitioning of C, H, and S in the melt in SCHO system.
+
+    Args:
+        PT (dict): Pressure in bars as "P" and temperature in 'C as "T"
+        melt_wf (dict): Melt composition (SiO2, TiO2, etc. including volatiles)
+        models (pandas.DataFrame): Model options
+        nr_step (float): Step-size for solver
+        nr_tol (float): Tolerance for solver
+        guesses (dict): Initial guesses for solver
+
+    Returns:
+        tuple(float,float,float,tuple(),tuple): Mole fraction CO2, mole fraction H2O, weight fraction S2-, Melt composition, Mass balance 
+    """     
     wt_S = melt_wf['ST']
     wt_H = melt_wf['HT']
     wt_C = melt_wf['CT']
@@ -732,6 +758,18 @@ def eq_CHS_melt(PT,melt_wf,models,nr_step,nr_tol,guesses):
     return xm_CO2_,xm_H2O_,wm_S2m_, results1, results2
 
 def melt_speciation(PT,melt_wf,models,nr_step,nr_tol):
+    """Calculate equilibrium speciation in the melt for a given bulk composition and P and T
+
+    Args:
+        PT (dict): Pressure in bars as "P" and temperature in 'C as "T"
+        melt_wf (dict): Melt composition (SiO2, TiO2, etc. including volatiles)
+        models (pandas.DataFrame): Model options
+        nr_step (float): Step-size for solver
+        nr_tol (float): Tolerance for solver
+
+    Returns:
+        dict: Melt composition for different volatile species
+    """    
     system = set_system(melt_wf,models)
     wt_C = melt_wf['CT']
     wt_H = melt_wf['HT']
@@ -805,6 +843,20 @@ def melt_speciation(PT,melt_wf,models,nr_step,nr_tol):
     return conc
 
 def eq_SOFe_melt(PT,bulk_wf,melt_wf,models,nr_step,nr_tol,guesses): # equilibrium between S and Fe in the melt
+    """Equilibrium speciation between S and Fe in the melt.
+
+    Args:
+        PT (dict): Pressure in bars as "P" and temperature in 'C as "T"
+        bulk_wf (dict): Bulk composition in weight fraction
+        melt_wf (dict): Melt composition (SiO2, TiO2, etc. including volatiles)
+        models (pandas.DataFrame): Model options
+        nr_step (float): Step-size for solver
+        nr_tol (float): Tolerance for solver
+        guesses (dict): Initial guesses for solver
+
+    Returns:
+        tuple(float,tuple(),tuple(),tuple()): fO2, Melt composition, Mass balance, Mass balance
+    """    
     P = PT["P"]
     wt_O = bulk_wf['O']
     wt_S = bulk_wf['S']
@@ -861,37 +913,20 @@ def eq_SOFe_melt(PT,bulk_wf,melt_wf,models,nr_step,nr_tol,guesses): # equilibriu
 ### solver ###
 ##############
 
-def test_f(x,y):
-    eq1 = x**2 + y**3 + 7*x*y
-    eq2 = x + 2*y**2 + 3*x*y
-    return eq1, eq2,0,0,0
-
-def test_df(x,y):
-    eq1_x = 2*x + 7*y
-    eq1_y = 3*y**2 + 7*x
-    eq2_x = 1 + 3*y
-    eq2_y = 4*y + 3*x
-    return eq1_x, eq1_y, eq2_x, eq2_y
-
-def test3_f(x,y,z):
-    eq1 = x**2 + y**3 + 7*x*y + x*z
-    eq2 = x + 2*y**2 + 3*x*y + x*z**3
-    eq3 = x + y + z + 3*z**2
-    return eq1, eq2, eq3,0,0,0,0
-
-def test3_df(x,y,z):
-    eq1_x = 2*x + 7*y + z
-    eq1_y = 3*y**2 + 7*x
-    eq1_z = x
-    eq2_x = 1 + 3*y + z**3
-    eq2_y = 4*y + 3*x
-    eq2_z = 3*x*z**2
-    eq3_x = 1
-    eq3_y = 1
-    eq3_z = 1 + 3*z
-    return eq1_x, eq1_y, eq1_z, eq2_x, eq2_y, eq2_z, eq3_x, eq3_y, eq3_z
-
 def newton_raphson(x0,constants,e1,step,eqs,deriv):
+    """_summary_
+
+    Args:
+        x0 (float): Initial guess
+        constants (list): Constants required to evaluate equations
+        e1 (float): Tolerance for solver
+        step (float): Step-size for solver
+        eqs (function): Equations to solve
+        deriv (function): Differentials of equations to solve
+
+    Returns:
+        float: Solution
+    """    
     # create results table
     results = pd.DataFrame([["guessx","diff","step"]])  
     results.to_csv('results_newtraph.csv', index=False, header=False)
