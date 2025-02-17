@@ -562,13 +562,13 @@ def C_H2O(PT,melt_wf,models=default_models):
 
     Parameters
     ----------
-    PT: pandas.DataFrame
-        Dataframe of pressure-temperature conditions:
+    PT: dict
+        Dictionary of pressure-temperature conditions:
         pressure (bars) as "P"
         temperature ('C) as "T"
         
-    melt_wf: pandas.DataFrame
-        Dataframe of melt composition (SiO2, TiO2, etc.)
+    melt_wf: dict
+        Dictionary of melt composition (SiO2, TiO2, etc.)
         Not normally used unless model option requires melt composition.
         
     models: pandas.DataFrame
@@ -652,6 +652,13 @@ def C_H2O(PT,melt_wf,models=default_models):
                 C = A*gp.exp((-DV*(P-P0))/(R*T0)) 
             else:
                 C = A*math.exp((-DV*(P-P0))/(R*T0)) 
+        elif model_solubility == "NorthArchBasalt_Dixon97": # Eq. (9) from Dixon (1997) Am. Min. 82:368-378
+            A = (-3.4e-5)-((1.29e-6)*(melt_comp_ox["SiO2"]*100.)) # XmH2Om0
+            DV = 12. # VH2Om0 in cm3/mol
+            if models.loc["high precision","option"] == "True":
+                C = A*gp.exp((-DV*(P-P0))/(R*T0)) 
+            else:
+                C = A*math.exp((-DV*(P-P0))/(R*T0)) 
         
         ### Work in progress ###
         elif model_solubility == "ETN-1": # Fitted to ETN-1 and VES-9 Xm_H2Omol calculated at 1200 'C data from Lesne et al. (2011) 162:133-151
@@ -675,13 +682,13 @@ def C_CO3(PT,melt_wf,models=default_models): ### C_CO2,T = xmCO2,T/fCO2 ### (mol
 
     Parameters
     ----------
-    PT: pandas.DataFrame
-        Dataframe of pressure-temperature conditions
+    PT: dict
+        Dictionary of pressure-temperature conditions
         pressure (bars) as "P"
         temperature ('C) as "T"
         
-    melt_wf: pandas.DataFrame
-        Dataframe of melt composition (SiO2, TiO2, etc.)
+    melt_wf: dict
+        Dictionary of melt composition (SiO2, TiO2, etc.)
         Not normally used unless model option requires melt composition.
     
     models: pandas.DataFrame
@@ -1049,13 +1056,13 @@ def C_S(PT,melt_wf,models=default_models): ### C_S = wmS2-*(fO2/fS2)^0.5 ### (we
 
     Parameters
     ----------
-    PT: pandas.DataFrame
-        Dataframe of pressure-temperature conditions
+    PT: dict
+        Dictionary of pressure-temperature conditions
         pressure (bars) as "P"
         temperature ('C) as "T"
         
-    melt_wf: pandas.DataFrame
-        Dataframe of melt composition (SiO2, TiO2, etc.)
+    melt_wf: dict
+        Dictionary of melt composition (SiO2, TiO2, etc.)
     
     models: pandas.DataFrame
         Minimum requirement is dataframe with index of "sulfide" and column label of "option"
@@ -1135,13 +1142,13 @@ def C_SO4(PT,melt_wf,models=default_models): ### C_SO4 = wmS6+*(fS2*fO2^3)^-0.5 
 
     Parameters
     ----------
-    PT: pandas.DataFrame
-        Dataframe of pressure-temperature conditions
+    PT: dict
+        Dictionary of pressure-temperature conditions
         pressure (bars) as "P"
         temperature ('C) as "T"
         
-    melt_wf: pandas.DataFrame
-        Dataframe of melt composition (SiO2, TiO2, etc.)
+    melt_wf: dict
+        Dictionary of melt composition (SiO2, TiO2, etc.)
     
     models: pandas.DataFrame
         Minimum requirement is dataframe with index of "sulfate" and column label of "option"
@@ -1245,13 +1252,13 @@ def C_H2S(PT,melt_wf,models=default_models): # C_H2S = wmH2S/fH2S (ppm H2S, fH2S
 
     Parameters
     ----------
-    PT: pandas.DataFrame
-        Dataframe of pressure-temperature conditions
+    PT: dict
+        Dictionary of pressure-temperature conditions
         pressure (bars) as "P"
         temperature ('C) as "T"
         
-    melt_wf: pandas.DataFrame
-        Dataframe of melt composition (SiO2, TiO2, etc.)
+    melt_wf: dict
+        Dictionary of melt composition (SiO2, TiO2, etc.)
         Not normally used unless model option requires melt composition.
     
     models: pandas.DataFrame
@@ -1290,13 +1297,13 @@ def C_H2(PT,melt_wf,models=default_models): # C_H2 = wmH2/fH2 (wtppm)
 
     Parameters
     ----------
-    PT: pandas.DataFrame
-        Dataframe of pressure-temperature conditions
+    PT: dict
+        Dictionary of pressure-temperature conditions
         pressure (bars) as "P"
         temperature ('C) as "T"
         
-    melt_wf: pandas.DataFrame
-        Dataframe of melt composition (SiO2, TiO2, etc.)
+    melt_wf: dict
+        Dictionary of melt composition (SiO2, TiO2, etc.)
         Not normally used unless model option requires melt composition.
     
     models: pandas.DataFrame
@@ -1350,13 +1357,13 @@ def C_CH4(PT,melt_wf,models=default_models): # C_CH4 = wmCH4/fCH4 (ppm)
 
     Parameters
     ----------
-    PT: pandas.DataFrame
-        Dataframe of pressure-temperature conditions
+    PT: dict
+        Dictionary of pressure-temperature conditions
         pressure (bars) as "P"
         temperature ('C) as "T"
         
-    melt_wf: pandas.DataFrame
-        Dataframe of melt composition (SiO2, TiO2, etc.)
+    melt_wf: dict
+        Dictionary of melt composition (SiO2, TiO2, etc.)
         Not normally used unless model option requires melt composition.
     
     models: pandas.DataFrame
@@ -1406,13 +1413,13 @@ def C_CO(PT,melt_wf,models=default_models): # C_CO = wmCO/fCO (ppm)
 
     Parameters
     ----------
-    PT: pandas.DataFrame
-        Dataframe of pressure-temperature conditions
+    PT: dict
+        Dictionary of pressure-temperature conditions
         pressure (bars) as "P"
         temperature ('C) as "T"
         
-    melt_wf: pandas.DataFrame
-        Dataframe of melt composition (SiO2, TiO2, etc.)
+    melt_wf: dict
+        Dictionary of melt composition (SiO2, TiO2, etc.)
         Not normally used unless model option requires melt composition.
     
     models: pandas.DataFrame
@@ -1459,13 +1466,13 @@ def C_X(PT,melt_wf,models=default_models): # C_X = wmX/fX (ppm)
 
     Parameters
     ----------
-    PT: pandas.DataFrame
-        Dataframe of pressure-temperature conditions
+    PT: dict
+        Dictionary of pressure-temperature conditions
         pressure (bars) as "P"
         temperature ('C) as "T"
         
-    melt_wf: pandas.DataFrame
-        Dataframe of melt composition (SiO2, TiO2, etc.)
+    melt_wf: dict
+        Dictionary of melt composition (SiO2, TiO2, etc.)
         Not normally used unless model option requires melt composition.
     
     models: pandas.DataFrame
@@ -1543,13 +1550,13 @@ def SCAS(PT,melt_wf,models=default_models):
 
     Parameters
     ----------
-    PT: pandas.DataFrame
-        Dataframe of pressure-temperature conditions
+    PT: dict
+        Dictionary of pressure-temperature conditions
         pressure (bars) as "P"
         temperature ('C) as "T"
         
-    melt_wf: pandas.DataFrame
-        Dataframe of melt composition (SiO2, TiO2, etc.)
+    melt_wf: dict
+        Dictionary of melt composition (SiO2, TiO2, etc.)
     
     models: pandas.DataFrame
         Minimum requirement is dataframe with index of "SCAS" and column label of "option"
@@ -1652,13 +1659,13 @@ def SCSS(PT,melt_wf,models=default_models): # sulfide content (ppm) at sulfide s
 
     Parameters
     ----------
-    PT: pandas.DataFrame
-        Dataframe of pressure-temperature conditions
+    PT: dict
+        Dictionary of pressure-temperature conditions
         pressure (bars) as "P"
         temperature ('C) as "T"
         
-    melt_wf: pandas.DataFrame
-        Dataframe of melt composition (SiO2, TiO2, etc.). Assumes sulfide is pure FeS unless specified in melt_wf
+    melt_wf: dict
+        Dictionary of melt composition (SiO2, TiO2, etc.). Assumes sulfide is pure FeS unless specified in melt_wf
     
     models: pandas.DataFrame
         Minimum requirement is dataframe with index of "SCSS" and column label of "option"
@@ -1806,8 +1813,8 @@ def KHOg(PT,models=default_models):
 
     Parameters
     ----------
-    PT: pandas.DataFrame
-        Dataframe of pressure-temperature conditions
+    PT: dict
+        Dictionary of pressure-temperature conditions
         pressure (bars) as "P"
         temperature ('C) as "T"
     
@@ -1846,8 +1853,8 @@ def KHOSg(PT,models=default_models):
 
     Parameters
     ----------
-    PT: pandas.DataFrame
-        Dataframe of pressure-temperature conditions
+    PT: dict
+        Dictionary of pressure-temperature conditions
         pressure (bars) as "P"
         temperature ('C) as "T"
     
@@ -1889,8 +1896,8 @@ def KOSg(PT,models=default_models):
 
     Parameters
     ----------
-    PT: pandas.DataFrame
-        Dataframe of pressure-temperature conditions
+    PT: dict
+        Dictionary of pressure-temperature conditions
         pressure (bars) as "P"
         temperature ('C) as "T"
     
@@ -1929,8 +1936,8 @@ def KOSg2(PT,models=default_models):
 
     Parameters
     ----------
-    PT: pandas.DataFrame
-        Dataframe of pressure-temperature conditions
+    PT: dict
+        Dictionary of pressure-temperature conditions
         pressure (bars) as "P"
         temperature ('C) as "T"
     
@@ -1972,8 +1979,8 @@ def KCOg(PT,models=default_models):
 
     Parameters
     ----------
-    PT: pandas.DataFrame
-        Dataframe of pressure-temperature conditions
+    PT: dict
+        Dictionary of pressure-temperature conditions
         pressure (bars) as "P"
         temperature ('C) as "T"
     
@@ -2010,8 +2017,8 @@ def KCOHg(PT,models=default_models):
 
     Parameters
     ----------
-    PT: pandas.DataFrame
-        Dataframe of pressure-temperature conditions
+    PT: dict
+        Dictionary of pressure-temperature conditions
         pressure (bars) as "P"
         temperature ('C) as "T"
     
@@ -2051,8 +2058,8 @@ def KOCSg(PT,models=default_models): # OCS - depends on system
 
     Parameters
     ----------
-    PT: pandas.DataFrame
-        Dataframe of pressure-temperature conditions
+    PT: dict
+        Dictionary of pressure-temperature conditions
         pressure (bars) as "P"
         temperature ('C) as "T"
     
@@ -2105,8 +2112,8 @@ def KCOs(PT,models=default_models):
 
     Parameters
     ----------
-    PT: pandas.DataFrame
-        Dataframe of pressure-temperature conditions
+    PT: dict
+        Dictionary of pressure-temperature conditions
         pressure (bars) as "P"
         temperature ('C) as "T"
     
@@ -2153,13 +2160,13 @@ def KHOm(PT,melt_wf,models=default_models):
 
     Parameters
     ----------
-    PT: pandas.DataFrame
-        Dataframe of pressure-temperature conditions
+    PT: dict
+        Dictionary of pressure-temperature conditions
         pressure (bars) as "P"
         temperature ('C) as "T"
 
-    melt_wf: pandas.DataFrame
-        Dataframe of melt composition (SiO2, TiO2, etc.)
+    melt_wf: dict
+        Dictionary of melt composition (SiO2, TiO2, etc.)
         Not normally used unless model option requires melt composition.
     
     models: pandas.DataFrame
@@ -2231,9 +2238,11 @@ def KHOm(PT,melt_wf,models=default_models):
             K = math.exp((a/T_K) + b)
     elif Hspeccomp == "Albite_Silver89": # Fig. 8 from Silver & Stolper (1989) J.Pet 30(3)667-709
         K = 0.17
+    else:
+        K = 0.17
     
     ### Work in progress ###
-    elif Hspeccomp == "AlkaliBasalt": # average of eqn-15-17 from Lesne et al. (2010) CMP 162:133-151
+    if Hspeccomp == "AlkaliBasalt": # average of eqn-15-17 from Lesne et al. (2010) CMP 162:133-151
         a = -8348.0 # VES-9 = -8033.0, ETN-1 = -8300.0, and PST-9 = -8710.0
         b = 7.8108 # VES-9 = 7.4222, ETN-1 = 7.4859, and PEST-9 = 8.5244
         if models.loc["high precision","option"] == "True":
@@ -2251,13 +2260,13 @@ def KregH2O(PT,melt_wf,models=default_models):
 
     Parameters
     ----------
-    PT: pandas.DataFrame
-        Dataframe of pressure-temperature conditions
+    PT: dict
+        Dictionary of pressure-temperature conditions
         pressure (bars) as "P"
         temperature ('C) as "T"
 
-    melt_wf: pandas.DataFrame
-        Dataframe of melt composition (SiO2, TiO2, etc.)
+    melt_wf: dict
+        Dictionary of melt composition (SiO2, TiO2, etc.)
         Not normally used unless model option requires melt composition.
     
     models: pandas.DataFrame
@@ -2314,6 +2323,8 @@ def KregH2O(PT,melt_wf,models=default_models):
         A = 0.5761*(Na+K) - 0.2884 # eqn-8
         B = -8.9589*(Na+K) + 24.65 # eqn-9
         C = 1.7013*(Na+K) + 9.6481 # eqn-1
+    
+    return A, B, C
        
     
 # CO2 + O = CO3
@@ -2324,13 +2335,13 @@ def KCOm(PT,melt_wf,models=default_models): # K =
 
     Parameters
     ----------
-    PT: pandas.DataFrame
-        Dataframe of pressure-temperature conditions
+    PT: dict
+        Dictionary of pressure-temperature conditions
         pressure (bars) as "P"
         temperature ('C) as "T"
     
-    melt_wf: pandas.DataFrame
-        Dataframe of melt composition (SiO2, TiO2, etc.)
+    melt_wf: dict
+        Dictionary of melt composition (SiO2, TiO2, etc.)
         Not normally used unless model option requires melt composition.
     
     models: pandas.DataFrame
@@ -2393,8 +2404,8 @@ def CORK(PT,p0,a,b,c,d,models):
 
     Parameters
     ----------
-    PT: pandas.DataFrame
-        Dataframe of pressure-temperature conditions
+    PT: dict
+        Dictionary of pressure-temperature conditions
         pressure (bars) as "P"
         temperature ('C) as "T"
     
@@ -2523,8 +2534,8 @@ def lny_SS(PT,Pcr,Tcr,models):
 
     Parameters
     ----------
-    PT: pandas.DataFrame
-        Dataframe of pressure-temperature conditions
+    PT: dict
+        Dictionary of pressure-temperature conditions
         pressure (bars) as "P"
         temperature ('C) as "T"
     
@@ -2562,8 +2573,8 @@ def Q_SS(PT,Tr,Pcr,models):
 
     Parameters
     ----------
-    PT: pandas.DataFrame
-        Dataframe of pressure-temperature conditions
+    PT: dict
+        Dictionary of pressure-temperature conditions
         pressure (bars) as "P"
         temperature ('C) as "T"
     
@@ -2665,8 +2676,8 @@ def y_SS(gas_species,PT,models=default_models):
     gas_species: string
         Name of gas species
 
-    PT: pandas.DataFrame
-        Dataframe of pressure-temperature conditions
+    PT: dict
+        Dictionary of pressure-temperature conditions
         pressure (bars) as "P"
         temperature ('C) as "T"
     
@@ -2706,8 +2717,8 @@ def y_H2(PT,models=default_models):
 
     Parameters
     ----------
-    PT: pandas.DataFrame
-        Dataframe of pressure-temperature conditions
+    PT: dict
+        Dictionary of pressure-temperature conditions
         pressure (bars) as "P"
         temperature ('C) as "T"
     
@@ -2826,8 +2837,8 @@ def y_H2O(PT,models=default_models):
 
     Parameters
     ----------
-    PT: pandas.DataFrame
-        Dataframe of pressure-temperature conditions
+    PT: dict
+        Dictionary of pressure-temperature conditions
         pressure (bars) as "P"
         temperature ('C) as "T"
     
@@ -2875,8 +2886,8 @@ def y_CO2(PT,models=default_models):
 
     Parameters
     ----------
-    PT: pandas.DataFrame
-        Dataframe of pressure-temperature conditions
+    PT: dict
+        Dictionary of pressure-temperature conditions
         pressure (bars) as "P"
         temperature ('C) as "T"
     
@@ -2927,8 +2938,8 @@ def y_O2(PT,models=default_models):
 
     Parameters
     ----------
-    PT: pandas.DataFrame
-        Dataframe of pressure-temperature conditions
+    PT: dict
+        Dictionary of pressure-temperature conditions
         pressure (bars) as "P"
         temperature ('C) as "T"
     
@@ -2962,8 +2973,8 @@ def y_S2(PT,models=default_models):
 
     Parameters
     ----------
-    PT: pandas.DataFrame
-        Dataframe of pressure-temperature conditions
+    PT: dict
+        Dictionary of pressure-temperature conditions
         pressure (bars) as "P"
         temperature ('C) as "T"
     
@@ -2997,8 +3008,8 @@ def y_CO(PT,models=default_models):
 
     Parameters
     ----------
-    PT: pandas.DataFrame
-        Dataframe of pressure-temperature conditions
+    PT: dict
+        Dictionary of pressure-temperature conditions
         pressure (bars) as "P"
         temperature ('C) as "T"
     
@@ -3032,8 +3043,8 @@ def y_CH4(PT,models=default_models):
 
     Parameters
     ----------
-    PT: pandas.DataFrame
-        Dataframe of pressure-temperature conditions
+    PT: dict
+        Dictionary of pressure-temperature conditions
         pressure (bars) as "P"
         temperature ('C) as "T"
     
@@ -3067,8 +3078,8 @@ def y_OCS(PT,models=default_models):
 
     Parameters
     ----------
-    PT: pandas.DataFrame
-        Dataframe of pressure-temperature conditions
+    PT: dict
+        Dictionary of pressure-temperature conditions
         pressure (bars) as "P"
         temperature ('C) as "T"
     
@@ -3102,8 +3113,8 @@ def y_X(PT,models=default_models): # species X fugacity coefficient
 
     Parameters
     ----------
-    PT: pandas.DataFrame
-        Dataframe of pressure-temperature conditions
+    PT: dict
+        Dictionary of pressure-temperature conditions
         pressure (bars) as "P"
         temperature ('C) as "T"
     
@@ -3138,8 +3149,8 @@ def y_SO2(PT,models=default_models):
 
     Parameters
     ----------
-    PT: pandas.DataFrame
-        Dataframe of pressure-temperature conditions
+    PT: dict
+        Dictionary of pressure-temperature conditions
         pressure (bars) as "P"
         temperature ('C) as "T"
     
@@ -3221,8 +3232,8 @@ def y_H2S(PT,models=default_models):
 
     Parameters
     ----------
-    PT: pandas.DataFrame
-        Dataframe of pressure-temperature conditions
+    PT: dict
+        Dictionary of pressure-temperature conditions
         pressure (bars) as "P"
         temperature ('C) as "T"
     
@@ -3363,8 +3374,8 @@ def NNO(PT,models=default_models):
 
     Parameters
     ----------
-    PT: pandas.DataFrame
-        Dataframe of pressure-temperature conditions
+    PT: dict
+        Dictionary of pressure-temperature conditions
         pressure (bars) as "P"
         temperature ('C) as "T"
     
@@ -3398,8 +3409,8 @@ def FMQ(PT,models=default_models):
 
     Parameters
     ----------
-    PT: pandas.DataFrame
-        Dataframe of pressure-temperature conditions
+    PT: dict
+        Dictionary of pressure-temperature conditions
         pressure (bars) as "P"
         temperature ('C) as "T"
     
@@ -3438,13 +3449,13 @@ def FefO2_KC91_Eq7_terms(PT,melt_wf,models=default_models): # terms for Eq. (7) 
 
     Parameters
     ----------
-    PT: pandas.DataFrame
-        Dataframe of pressure-temperature conditions
+    PT: dict
+        Dictionary of pressure-temperature conditions
         pressure (bars) as "P"
         temperature ('C) as "T"
 
-    melt_wf: pandas.DataFrame
-        Dataframe of melt composition (SiO2, TiO2, etc.)
+    melt_wf: dict
+        Dictionary of melt composition (SiO2, TiO2, etc.)
     
     models: pandas.DataFrame
         Dataframe of model options
@@ -3488,13 +3499,13 @@ def FefO2_KC91_EqA_terms(PT,melt_wf,models=default_models): # terms for Eq. (A-5
 
     Parameters
     ----------
-    PT: pandas.DataFrame
-        Dataframe of pressure-temperature conditions
+    PT: dict
+        Dictionary of pressure-temperature conditions
         pressure (bars) as "P"
         temperature ('C) as "T"
 
-    melt_wf: pandas.DataFrame
-        Dataframe of melt composition (SiO2, TiO2, etc.)
+    melt_wf: dict
+        Dictionary of melt composition (SiO2, TiO2, etc.)
     
     models: pandas.DataFrame
         Dataframe of model options
@@ -3540,13 +3551,13 @@ def FefO2_ONeill18_terms(PT,melt_wf,models=default_models): # Eq. (9a) in O'Neil
 
     Parameters
     ----------
-    PT: pandas.DataFrame
-        Dataframe of pressure-temperature conditions
+    PT: dict
+        Dictionary of pressure-temperature conditions
         pressure (bars) as "P"
         temperature ('C) as "T"
 
-    melt_wf: pandas.DataFrame
-        Dataframe of melt composition (SiO2, TiO2, etc.)
+    melt_wf: dict
+        Dictionary of melt composition (SiO2, TiO2, etc.)
     
     models: pandas.DataFrame
         Dataframe of model options
@@ -3581,13 +3592,13 @@ def fO22Fe3FeT(fO2,PT,melt_wf,models=default_models): # converting fO2 to Fe3/Fe
 
     Parameters
     ----------
-    PT: pandas.DataFrame
-        Dataframe of pressure-temperature conditions
+    PT: dict
+        Dictionary of pressure-temperature conditions
         pressure (bars) as "P"
         temperature ('C) as "T"
 
-    melt_wf: pandas.DataFrame
-        Dataframe of melt composition (SiO2, TiO2, etc.)
+    melt_wf: dict
+        Dictionary of melt composition (SiO2, TiO2, etc.)
     
     models: pandas.DataFrame
         Minimum requirement is dataframe with index of "fO2" and column label of "option"
@@ -3653,13 +3664,13 @@ def f_O2(PT,melt_wf,models=default_models):
 
     Parameters
     ----------
-    PT: pandas.DataFrame
-        Dataframe of pressure-temperature conditions
+    PT: dict
+        Dictionary of pressure-temperature conditions
         pressure (bars) as "P"
         temperature ('C) as "T"
 
-    melt_wf: pandas.DataFrame
-        Dataframe of melt composition (SiO2, TiO2, etc.)
+    melt_wf: dict
+        Dictionary of melt composition (SiO2, TiO2, etc.)
     
     models: pandas.DataFrame
         Minimum requirement is dataframe with index of "fO2" and column label of "option"
@@ -3758,14 +3769,13 @@ def melt_density(PT,melt_wf,models=default_models): # g/cm3
 
     Parameters
     ----------
-    PT: pandas.DataFrame
+    PT: dict
         Dataframe of pressure-temperature conditions
         pressure (bars) as "P"
         temperature ('C) as "T"
     
-    melt_wf: pandas.DataFrame
-        Dataframe of melt composition (SiO2, TiO2, etc.)
-        Not normally used unless model option requires melt composition.
+    melt_wf: dict
+        Dictionary of melt composition (SiO2, TiO2, etc.)
     
     models: pandas.DataFrame
         Minimum requirement is dataframe with index of "density" and column label of "option"
@@ -3834,7 +3844,7 @@ species = [['H','',1.008,1.,0.,1.,'','','','','','','',''],
         ['SO4','',96.056,-2.,4.,6,'',4.,'','','','','',''],
         ['OCS','',60.07,0.,1.,'','','',377.55,65.8612,'','','',''],
         ['O2','',31.998,0.,2.,'','','',154.75,50.7638,'','','',''],
-        ['H2','',2.016,0.,0.,'','','',33.25,12.9696,'','','',''],
+        ['H2','',2.016,0.,0.,'','','',33.25,12.9696,2.016,'',2.016,''],
         ['CH4','',16.043,0.,0.,'','','',191.05,46.4069,'','','',''],
         ['Ar','',39.948,'','','','','','','','','','',''],
         ['Ne','',20.1797,'','','','','','','','','','','']]    
