@@ -921,7 +921,7 @@ def newton_raphson(x0,constants,e1,step,eqs,deriv):
         constants (list): Constants required to evaluate equations
         e1 (float): Tolerance for solver
         step (float): Step-size for solver
-        eqs (function): Equations to solve
+        eqs (func): Equations to solve
         deriv (func): Differentials of equations to solve
 
     Returns:
@@ -965,7 +965,21 @@ def newton_raphson(x0,constants,e1,step,eqs,deriv):
 #jac_newton(1,1,test_f,test_df,1)
 
 def jac_newton(x0,y0,constants,eqs,deriv,step,tol,maxiter=1000):
+    """Jacobian matrix/Newton-Raphson approach in 2D.
 
+    Args:
+        x0 (float): Initial guess for parameter x
+        y0 (float): Initial guess for parameter y
+        constants (list): Constants required to evaluate equations
+        eqs (func): Equations to solve
+        deriv (func): Differentials of equations to solve
+        step (float): Step-size for solver
+        tol (float): Tolerance for solver
+        maxiter (int, optional): Maximum number of iterations to try. Defaults to 1000.
+
+    Returns:
+        tuple(float,float): Solution for x, solution for y
+    """
     # create results table
     results = pd.DataFrame([["guessx","guessy","diff1","diff2","step"]])  
     diff1, diff2, wtg1,wtg2,wtg3 = eqs(x0,y0)
@@ -1056,6 +1070,22 @@ def jac_newton(x0,y0,constants,eqs,deriv,step,tol,maxiter=1000):
     return guessx,guessy
 
 def jac_newton3(x0,y0,z0,constants,eqs,deriv,step,tol,maxiter=50):
+    """_summary_
+
+    Args:
+        x0 (float): Initial guess for parameter x
+        y0 (float): Initial guess for parameter y
+        z0 (float): Initial guess for parameter z
+        constants (list): Constants required to evaluate equations
+        eqs (func): Equations to solve
+        deriv (func): Differentials of equations to solve
+        step (float): Step-size for solver
+        tol (float): Tolerance for solver
+        maxiter (int, optional): Maximum number of iterations to try. Defaults to 50.
+
+    Returns:
+        tuple(float,float,float): Solution for x, solution for y, solution for z
+    """    
 # create results table
     results = pd.DataFrame([["guessx","guessy","guessz","diff1","diff2","diff3","step"]])  
     diff1, diff2, diff3, wtg1,wtg2,wtg3,wtg4 = eqs(x0,y0,z0)
@@ -1159,6 +1189,20 @@ def jac_newton3(x0,y0,z0,constants,eqs,deriv,step,tol,maxiter=50):
 ############
 
 def eq_COFe(PT,bulk_wf,melt_wf,models,nr_step,nr_tol,guesses):
+    """Equilibrium speciation between melt and gas for COFe system.
+
+    Args:
+        PT (dict): Pressure in bars as "P" and temperature in 'C as "T"
+        bulk_wf (dict): Bulk composition in weight fraction
+        melt_wf (dict): Melt composition (SiO2, TiO2, etc. including volatiles)
+        models (pandas.Dataframe): Model options
+        nr_step (float): Step-size for solver
+        nr_tol (float): Tolerance for solver
+        guesses (dict): Initial guesses for solver
+
+    Returns:
+        tuple(float,tuple(),tuple(),tuple()): Mole fraction O2 in vapor; Melt and gas composition; Weight fraction gas; Mass balance
+    """    
     P = PT["P"]
     wt_O = bulk_wf['O']
     wt_C = bulk_wf['C']
@@ -1236,6 +1280,20 @@ def eq_COFe(PT,bulk_wf,melt_wf,models,nr_step,nr_tol,guesses):
 ############
 
 def eq_HOFe(PT,bulk_wf,melt_wf,models,nr_step,nr_tol,guesses):
+    """Equilibrium speciation between melt and gas for HOFe system.
+
+    Args:
+        PT (dict): Pressure in bars as "P" and temperature in 'C as "T"
+        bulk_wf (dict): Bulk composition in weight fraction
+        melt_wf (dict): Melt composition (SiO2, TiO2, etc. including volatiles)
+        models (pandas.Dataframe): Model options
+        nr_step (float): Step-size for solver
+        nr_tol (float): Tolerance for solver
+        guesses (dict): Initial guesses for solver
+
+    Returns:
+        tuple(float,tuple(),tuple(),tuple()): Mole fraction O2 in vapor; Melt and gas composition; Weight fraction gas; Mass balance
+    """    
     P = PT["P"]
     wt_O = bulk_wf['O']
     wt_H = bulk_wf['H']
@@ -1315,6 +1373,20 @@ def eq_HOFe(PT,bulk_wf,melt_wf,models,nr_step,nr_tol,guesses):
 ####################
 
 def eq_HOFe_xenia(PT,bulk_wf,melt_wf,models,nr_step,nr_tol,guesses):
+    """Equilibrium speciation between melt and gas for HOFe system for Xenia's system.
+
+    Args:
+        PT (dict): Pressure in bars as "P" and temperature in 'C as "T"
+        bulk_wf (dict): Bulk composition in weight fraction
+        melt_wf (dict): Melt composition (SiO2, TiO2, etc. including volatiles)
+        models (pandas.Dataframe): Model options
+        nr_step (float): Step-size for solver
+        nr_tol (float): Tolerance for solver
+        guesses (dict): Initial guesses for solver
+
+    Returns:
+        tuple(float,tuple(),tuple(),tuple()): Mole fraction O2 in vapor; Melt and gas composition; Weight fraction gas; Mass balance
+    """    
     P = PT["P"]
     wt_O = bulk_wf['O']
     wt_H = bulk_wf['H']
@@ -1396,6 +1468,20 @@ def eq_HOFe_xenia(PT,bulk_wf,melt_wf,models,nr_step,nr_tol,guesses):
 ############
 
 def eq_SOFe(PT,bulk_wf,melt_wf,models,nr_step,nr_tol,guesses):
+    """Equilibrium speciation between melt and gas for SOFe system.
+
+    Args:
+        PT (dict): Pressure in bars as "P" and temperature in 'C as "T"
+        bulk_wf (dict): Bulk composition in weight fraction
+        melt_wf (dict): Melt composition (SiO2, TiO2, etc. including volatiles)
+        models (pandas.Dataframe): Model options
+        nr_step (float): Step-size for solver
+        nr_tol (float): Tolerance for solver
+        guesses (dict): Initial guesses for solver
+
+    Returns:
+        tuple(float,tuple(),tuple(),tuple()): Mole fraction O2 in vapor; Melt and gas composition; Weight fraction gas; Mass balance
+    """    
     P = PT["P"]
     wt_O = bulk_wf['O']
     wt_S = bulk_wf['S']
@@ -1476,6 +1562,20 @@ def eq_SOFe(PT,bulk_wf,melt_wf,models,nr_step,nr_tol,guesses):
 
 # no H2S or H2
 def eq_SHOFe(PT,bulk_wf,melt_wf,models,nr_step,nr_tol,guesses):
+    """Equilibrium speciation between melt and gas for SHOFe system with no H2S or H2.
+
+    Args:
+        PT (dict): Pressure in bars as "P" and temperature in 'C as "T"
+        bulk_wf (dict): Bulk composition in weight fraction
+        melt_wf (dict): Melt composition (SiO2, TiO2, etc. including volatiles)
+        models (pandas.Dataframe): Model options
+        nr_step (float): Step-size for solver
+        nr_tol (float): Tolerance for solver
+        guesses (dict): Initial guesses for solver
+
+    Returns:
+        tuple(float,float,tuple(),tuple(),tuple()): Mole fraction O2 in vapor; Mole fraction S2 in vapor; Melt and gas composition; Weight fraction gas; Mass balance
+    """    
     P = PT["P"]
     wt_O = bulk_wf['O']
     wt_S = bulk_wf['S']
@@ -1571,6 +1671,20 @@ def eq_SHOFe(PT,bulk_wf,melt_wf,models,nr_step,nr_tol,guesses):
 
 # includes H2S and H2
 def eq_SHOFe_2(PT,bulk_wf,melt_wf,models,nr_step,nr_tol,guesses):
+    """Equilibrium speciation between melt and gas for SHOFe system.
+
+    Args:
+        PT (dict): Pressure in bars as "P" and temperature in 'C as "T"
+        bulk_wf (dict): Bulk composition in weight fraction
+        melt_wf (dict): Melt composition (SiO2, TiO2, etc. including volatiles)
+        models (pandas.Dataframe): Model options
+        nr_step (float): Step-size for solver
+        nr_tol (float): Tolerance for solver
+        guesses (dict): Initial guesses for solver
+
+    Returns:
+        tuple(tuple(),tuple(),tuple(),tuple()): Mole fraction O2 and S2 in vapor; Melt and gas composition; Weight fraction gas; Mass balance
+    """    
     P = PT["P"]
     wt_O = bulk_wf['O']
     wt_S = bulk_wf['S']
@@ -1679,6 +1793,20 @@ def eq_SHOFe_2(PT,bulk_wf,melt_wf,models,nr_step,nr_tol,guesses):
 
 ### not finished ###
 def eq_SCOFe(PT,bulk_wf,melt_wf,models,nr_step,nr_tol,guesses):
+    """Equilibrium speciation between melt and gas for SCOFe system.
+
+    Args:
+        PT (dict): Pressure in bars as "P" and temperature in 'C as "T"
+        bulk_wf (dict): Bulk composition in weight fraction
+        melt_wf (dict): Melt composition (SiO2, TiO2, etc. including volatiles)
+        models (pandas.Dataframe): Model options
+        nr_step (float): Step-size for solver
+        nr_tol (float): Tolerance for solver
+        guesses (dict): Initial guesses for solver
+
+    Returns:
+        tuple(float,float,tuple(),tuple(),tuple()): Mole fraction O2 in vapor; Mole fraction S2 in vapor; Melt and gas composition; Weight fraction gas; Mass balance
+    """  
     P = PT["P"]
     wt_O = bulk_wf['O']
     wt_S = bulk_wf['S']
@@ -1781,6 +1909,20 @@ def eq_SCOFe(PT,bulk_wf,melt_wf,models,nr_step,nr_tol,guesses):
 #############
 
 def eq_COXFe(PT,bulk_wf,melt_wf,models,nr_step,nr_tol,guesses):
+    """Equilibrium speciation between melt and gas for COXFe system.
+
+    Args:
+        PT (dict): Pressure in bars as "P" and temperature in 'C as "T"
+        bulk_wf (dict): Bulk composition in weight fraction
+        melt_wf (dict): Melt composition (SiO2, TiO2, etc. including volatiles)
+        models (pandas.Dataframe): Model options
+        nr_step (float): Step-size for solver
+        nr_tol (float): Tolerance for solver
+        guesses (dict): Initial guesses for solver
+
+    Returns:
+        tuple(float,float,tuple(),tuple(),tuple()): Mole fraction O2 in vapor; Mole fraction CO in vapor; Melt and gas composition; Weight fraction gas; Mass balance
+    """  
     species_X = models.loc["species X","option"]
     P = PT["P"]
     wt_O = bulk_wf['O']
@@ -1869,6 +2011,20 @@ def eq_COXFe(PT,bulk_wf,melt_wf,models,nr_step,nr_tol,guesses):
 #############
 
 def eq_HOXFe(PT,bulk_wf,melt_wf,models,nr_step,nr_tol,guesses):
+    """Equilibrium speciation between melt and gas for HOXFe system.
+
+    Args:
+        PT (dict): Pressure in bars as "P" and temperature in 'C as "T"
+        bulk_wf (dict): Bulk composition in weight fraction
+        melt_wf (dict): Melt composition (SiO2, TiO2, etc. including volatiles)
+        models (pandas.Dataframe): Model options
+        nr_step (float): Step-size for solver
+        nr_tol (float): Tolerance for solver
+        guesses (dict): Initial guesses for solver
+
+    Returns:
+        tuple(float,float,tuple(),tuple(),tuple()): Mole fraction O2 in vapor; Mole fraction H2 in vapor; Melt and gas composition; Weight fraction gas; Mass balance
+    """  
     species_X = models.loc["species X","option"]
     P = PT["P"]
     wt_O = bulk_wf['O']
@@ -1959,6 +2115,20 @@ def eq_HOXFe(PT,bulk_wf,melt_wf,models,nr_step,nr_tol,guesses):
 ### insolubles not included
 
 def eq_CHOFe(PT,bulk_wf,melt_wf,models,nr_step,nr_tol,guesses):
+    """Equilibrium speciation between melt and gas for CHOFe system with no H2, CO, or CH4 dissolved in the melt.
+
+    Args:
+        PT (dict): Pressure in bars as "P" and temperature in 'C as "T"
+        bulk_wf (dict): Bulk composition in weight fraction
+        melt_wf (dict): Melt composition (SiO2, TiO2, etc. including volatiles)
+        models (pandas.Dataframe): Model options
+        nr_step (float): Step-size for solver
+        nr_tol (float): Tolerance for solver
+        guesses (dict): Initial guesses for solver
+
+    Returns:
+        tuple(float,float,tuple(),tuple(),tuple()): Mole fraction O2 in vapor; Mole fraction CO in vapor; Melt and gas composition; Weight fraction gas; Mass balance
+    """  
     P = PT["P"]
     wt_O = bulk_wf['O']
     wt_C = bulk_wf['C']
@@ -2051,6 +2221,20 @@ def eq_CHOFe(PT,bulk_wf,melt_wf,models,nr_step,nr_tol,guesses):
 
 ### insolubles included
 def eq_CHOFe_2(PT,bulk_wf,melt_wf,models,nr_step,nr_tol,guesses):
+    """Equilibrium speciation between melt and gas for CHOFe system.
+
+    Args:
+        PT (dict): Pressure in bars as "P" and temperature in 'C as "T"
+        bulk_wf (dict): Bulk composition in weight fraction
+        melt_wf (dict): Melt composition (SiO2, TiO2, etc. including volatiles)
+        models (pandas.Dataframe): Model options
+        nr_step (float): Step-size for solver
+        nr_tol (float): Tolerance for solver
+        guesses (dict): Initial guesses for solver
+
+    Returns:
+        tuple(float,float,tuple(),tuple(),tuple()): Mole fraction O2 in vapor; Mole fraction CO in vapor; Melt and gas composition; Weight fraction gas; Mass balance
+    """ 
     P = PT["P"]
     wt_O = bulk_wf['O']
     wt_C = bulk_wf['C']
@@ -2153,6 +2337,20 @@ def eq_CHOFe_2(PT,bulk_wf,melt_wf,models,nr_step,nr_tol,guesses):
 #########################
 
 def eq_CH(PT,bulk_wf,melt_wf,models,nr_step,nr_tol,guesses): # H2O
+    """Equilibrium speciation between melt and gas for CHOFe system with only H2O and CO2 in the system.
+
+    Args:
+        PT (dict): Pressure in bars as "P" and temperature in 'C as "T"
+        bulk_wf (dict): Bulk composition in weight fraction
+        melt_wf (dict): Melt composition (SiO2, TiO2, etc. including volatiles)
+        models (pandas.Dataframe): Model options
+        nr_step (float): Step-size for solver
+        nr_tol (float): Tolerance for solver
+        guesses (dict): Initial guesses for solver
+
+    Returns:
+        tuple(float,tuple(),tuple(),tuple()): Mole fraction CO2 in vapor; Melt and gas composition; Weight fraction gas; Mass balance
+    """ 
     P = PT["P"]
     wt_C = bulk_wf['C']
     wt_H = bulk_wf['H']
@@ -2215,6 +2413,21 @@ def eq_CH(PT,bulk_wf,melt_wf,models,nr_step,nr_tol,guesses): # H2O
 ##############
                         
 def eq_CHOXFe(PT,bulk_wf,melt_wf,models,nr_step,nr_tol,guesses,solve_species):
+    """Equilibrium speciation between melt and gas for CHOXFe system.
+
+    Args:
+        PT (dict): Pressure in bars as "P" and temperature in 'C as "T"
+        bulk_wf (dict): Bulk composition in weight fraction
+        melt_wf (dict): Melt composition (SiO2, TiO2, etc. including volatiles)
+        models (pandas.Dataframe): Model options
+        nr_step (float): Step-size for solver
+        nr_tol (float): Tolerance for solver
+        guesses (dict): Initial guesses for solver
+        solve_species (str): Identity of guessed species
+
+    Returns:
+        tuple(tuple(),tuple(),tuple(),tuple()): Solution for guessed species; Melt and gas composition; Weight fraction gas; Mass balance
+    """ 
     species_X = models.loc["species X","option"]
     P = PT["P"]
     wt_O = bulk_wf['O']
@@ -2342,6 +2555,21 @@ def eq_CHOXFe(PT,bulk_wf,melt_wf,models,nr_step,nr_tol,guesses,solve_species):
 # all gas species - only oxidised melt species - no H2S #
 
 def eq_SCHOFe(PT,bulk_wf,melt_wf,models,nr_step,nr_tol,guesses,solve_species):
+    """Equilibrium speciation between melt and gas for SCHOFe system with no dissolved H2, CO, CH4, or H2S in the melt.
+
+    Args:
+        PT (dict): Pressure in bars as "P" and temperature in 'C as "T"
+        bulk_wf (dict): Bulk composition in weight fraction
+        melt_wf (dict): Melt composition (SiO2, TiO2, etc. including volatiles)
+        models (pandas.Dataframe): Model options
+        nr_step (float): Step-size for solver
+        nr_tol (float): Tolerance for solver
+        guesses (dict): Initial guesses for solver
+        solve_species (str): Identity of guessed species
+
+    Returns:
+        tuple(tuple(),tuple(),tuple(),tuple()): Solution for guessed species; Melt and gas composition; Weight fraction gas; Mass balance
+    """ 
     P = PT["P"]
     wt_O = bulk_wf['O']
     wt_S = bulk_wf['S']
@@ -2586,6 +2814,21 @@ def eq_SCHOFe(PT,bulk_wf,melt_wf,models,nr_step,nr_tol,guesses,solve_species):
 # all gas species - oxidised and reduced melt species - H2S #
 
 def eq_SCHOFe_2(PT,bulk_wf,melt_wf,models,nr_step,nr_tol,guesses,solve_species):
+    """Equilibrium speciation between melt and gas for SCHOFe system.
+
+    Args:
+        PT (dict): Pressure in bars as "P" and temperature in 'C as "T"
+        bulk_wf (dict): Bulk composition in weight fraction
+        melt_wf (dict): Melt composition (SiO2, TiO2, etc. including volatiles)
+        models (pandas.Dataframe): Model options
+        nr_step (float): Step-size for solver
+        nr_tol (float): Tolerance for solver
+        guesses (dict): Initial guesses for solver
+        solve_species (str): Identity of guessed species
+
+    Returns:
+        tuple(tuple(),tuple(),tuple(),tuple()): Solution for guessed species; Melt and gas composition; Weight fraction gas; Mass balance
+    """ 
     P = PT["P"]
     wt_O = bulk_wf['O']
     wt_S = bulk_wf['S']
@@ -2876,6 +3119,21 @@ def eq_SCHOFe_2(PT,bulk_wf,melt_wf,models,nr_step,nr_tol,guesses,solve_species):
 
 # all gas species - oxidised and reduced melt species - H2S - H2O is linear with xmH2O #
 def eq_SCHOFe_3(PT,bulk_wf,melt_wf,models,nr_step,nr_tol,guesses,solve_species):
+    """Equilibrium speciation between melt and gas for SCHOFe system with linear relationship for H2O.
+
+    Args:
+        PT (dict): Pressure in bars as "P" and temperature in 'C as "T"
+        bulk_wf (dict): Bulk composition in weight fraction
+        melt_wf (dict): Melt composition (SiO2, TiO2, etc. including volatiles)
+        models (pandas.Dataframe): Model options
+        nr_step (float): Step-size for solver
+        nr_tol (float): Tolerance for solver
+        guesses (dict): Initial guesses for solver
+        solve_species (str): Identity of guessed species
+
+    Returns:
+        tuple(tuple(),tuple(),tuple(),tuple()): Solution for guessed species; Melt and gas composition; Weight fraction gas; Mass balance
+    """ 
     P = PT["P"]
     wt_O = bulk_wf['O']
     wt_S = bulk_wf['S']
@@ -3096,7 +3354,9 @@ def eq_SCHOFe_3(PT,bulk_wf,melt_wf,models,nr_step,nr_tol,guesses,solve_species):
 ### EDITING ###
 ###############
 
+### WORK IN PROGRESS ###
 def eq_SCHOXFe(PT,bulk_wf,melt_wf,models,nr_step,nr_tol,guesses,solve_species):
+
     species_X = models.loc["species X","option"]
     
     P = float(PT["P"])
