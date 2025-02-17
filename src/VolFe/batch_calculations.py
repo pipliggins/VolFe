@@ -1389,6 +1389,44 @@ def calc_melt_S_oxybarometer(setup,first_row=0,last_row=None,models=mdv.default_
 
     return results
 
+# function to calculate the SCSS and SCAS with varying melt composition
+def calc_sulfur_vcomp(setup,models=mdv.default_models):
+    """Calculates SCAS, SCSS, Csulfide and Csulfate for multiple melt compositions
+
+    Args:
+        setup (pandas.Dataframe): Input data
+        models (pandas.Dataframe, optional): Model options. Defaults to mdv.default_models.
+
+    Returns:
+        pandas.Dataframe: SCAS, SCSS, Csulfide and Csulfate for multiple melt compositions
+    """    
+    for n in range(0,len(setup),1):
+        melt_wf=vf.melt_comp(n,setup)
+        PT = {"T":setup.loc[n,"T_C"],"P":setup.loc[n,"P_bar"]}
+        P = int(PT["P"])
+        T = int(PT["T"])
+        melt_wf['CO2'] = setup.loc[n,"CO2ppm"]/1000000.
+        melt_wf["H2OT"] = setup.loc[n,"H2O"]/100.
+        melt_wf['ST'] = setup.loc[n,"STppm"]/1000000.
+        melt_wf['CT'] = (melt_wf['CO2']/vf.species.loc['CO2','M'])*vf.species.loc['C','M']
+        melt_wf['HT'] = (melt_wf['H2OT']/vf.species.loc['H2O','M'])*(2.*vf.species.loc['H','M'])
+        melt_wf['Fe3FeT'] = setup.loc[n,"Fe3+FeT"]
+        fO2 = vf.f_O2(PT,melt_wf,models)
+        FMQ = vf.fO22Dbuffer(PT,fO2,"FMQ",models)
+        sulfsat = vf.sulfur_saturation(PT,melt_wf,models)
+        sulfide_capacity = vf.C_S(PT,melt_wf)
+        sulfate_capacity = vf.C_SO4(PT,melt_wf)
+        # result = {"SCSS":SCSS_,"StCSS":StCSS,"sulfide_sat":sulfide_sat, "SCAS":SCAS_, "StCAS":StCAS,"sulfate_sat":sulfate_sat,"ST":ST}
+        results1 = pd.DataFrame([[P,T,FMQ,sulfsat["SCSS"],sulfsat["StCSS"],sulfsat["SCAS"],sulfsat["StCAS"],setup.loc[n,"MgO"],sulfide_capacity,sulfate_capacity]])
+        if n == 0.:
+            results_headers = pd.DataFrame([["P","T","FMQ","SCSS","StCSS","SCAS","StCAS","MgO","Csulfide","Csulfate"]])
+            results = pd.concat([results_headers, results1])
+        else:
+            results = pd.concat([results, results1])
+    results.columns = results.iloc[0]
+    results = results[1:]  
+    return results
+
 ########################################
 ### measured parameters within error ### 
 ########################################
